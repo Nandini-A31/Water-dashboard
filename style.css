@@ -1,0 +1,43 @@
+/* General body styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Login card */
+.login-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 30px;
+    width: 350px;
+    margin: auto;
+    margin-top: 10%;
+}
+
+/* Dashboard cards */
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Chart cards */
+canvas {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+
+/* Alerts */
+.alert {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Headings */
+h1, h3 {
+    font-weight: bold;
+}

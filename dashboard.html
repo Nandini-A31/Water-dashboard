@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Water Monitor</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f5f5;font-family:Arial;color:#333;}
+
+header{
+  background:#fff;border-bottom:2px solid #e0e0e0;
+  padding:16px 24px;display:flex;justify-content:space-between;
+}
+.live{display:flex;gap:6px;color:#4caf50;}
+.live-dot{width:8px;height:8px;background:#4caf50;border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{50%{opacity:0.3}}
+
+main{padding:24px;max-width:1100px;margin:auto;}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.card{background:#fff;border-radius:10px;padding:24px;text-align:center;border-top:4px solid;}
+.card.level{border-color:#2196f3;}
+.card.temp{border-color:#ff5722;}
+.card.ph{border-color:#4caf50;}
+
+.value{font-size:2.5rem;font-weight:bold;}
+
+.charts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.chart-box{background:#fff;padding:20px;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>💧 Water Monitor</h2>
+<div class="live"><div class="live-dot"></div>LIVE</div>
+<span id="lastUpdate"></span>
+<a href="/logout">Logout</a>
+</header>
+
+<main>
+
+<div class="cards">
+  <div class="card level">
+    <h4>Water Level</h4>
+    <div class="value" id="level">--</div>
+  </div>
+
+  <div class="card temp">
+    <h4>Temperature</h4>
+    <div class="value" id="temp">--</div>
+  </div>
+
+  <div class="card ph">
+    <h4>pH</h4>
+    <div class="value" id="ph">--</div>
+  </div>
+</div>
+
+<div class="charts">
+  <div class="chart-box"><canvas id="lvlChart"></canvas></div>
+  <div class="chart-box"><canvas id="tmpChart"></canvas></div>
+  <div class="chart-box"><canvas id="phChart"></canvas></div>
+</div>
+
+</main>
+
+<script>
+/* 🔐 LOGIN PROTECTION */
+fetch('/data')
+.then(res=>{
+  if(res.redirected){
+    window.location.href='/login';
+  }
+})
+.catch(()=>{
+  window.location.href='/login';
+});
+
+/* CHART SETUP */
+function makeChart(id,color){
+  return new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:[],datasets:[{data:[],borderColor:color}]},
+    options:{responsive:true}
+  });
+}
+
+const lvlChart = makeChart('lvlChart','#2196f3');
+const tmpChart = makeChart('tmpChart','#ff5722');
+const phChart  = makeChart('phChart','#4caf50');
+
+/* LOAD DATA */
+async function loadData(){
+  try{
+    const res = await fetch('/data');
+    const data = await res.json();
+    if(!data.length) return;
+
+    const d = data[0];
+
+    document.getElementById('level').innerText=d.level.toFixed(1);
+    document.getElementById('temp').innerText=d.temp.toFixed(1);
+    document.getElementById('ph').innerText=d.ph.toFixed(2);
+
+    document.getElementById('lastUpdate').innerText =
+      new Date(d.time).toLocaleTimeString();
+
+    const rev = data.reverse();
+    const labels = rev.map(x=>new Date(x.time).toLocaleTimeString());
+
+    lvlChart.data.labels = labels;
+    lvlChart.data.datasets[0].data = rev.map(x=>x.level);
+
+    tmpChart.data.labels = labels;
+    tmpChart.data.datasets[0].data = rev.map(x=>x.temp);
+
+    phChart.data.labels = labels;
+    phChart.data.datasets[0].data = rev.map(x=>x.ph);
+
+    lvlChart.update();
+    tmpChart.update();
+    phChart.update();
+
+  }catch(e){
+    console.log(e);
+  }
+}
+
+setInterval(loadData,2000);
+loadData();
+</script>
+
+</body>
+</html>

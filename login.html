@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Water Monitor</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0f4f8;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 36px;
+    width: 360px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    border-top: 5px solid #2196f3;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .logo h1 {
+    font-size: 1.4rem;
+    color: #2196f3;
+    margin-bottom: 4px;
+  }
+
+  .logo p {
+    font-size: 0.8rem;
+    color: #999;
+  }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 6px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    outline: none;
+    transition: border 0.2s;
+  }
+
+  input:focus { border-color: #2196f3; }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover { background: #1565c0; }
+
+  .error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+    border-radius: 7px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="logo">
+    <h1>💧 Water Monitor</h1>
+    <p>Sign in to view your dashboard</p>
+  </div>
+
+  {% if error %}
+  <div class="error">⚠ {{ error }}</div>
+  {% endif %}
+
+  <form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" placeholder="Enter username" required autofocus/>
+
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Enter password" required/>
+
+    <button type="submit">Sign In</button>
+  </form>
+</div>
+
+</body>
+</html>
